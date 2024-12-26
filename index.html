@@ -8,26 +8,30 @@
 </head>
 <body>
   <div id="main-container">
-    <!-- Chat Container -->
-    <div id="chat-container">
-      <h1>Chatbot</h1>
-      <div id="chat-history"></div>
-      <form id="chat-form">
-        <input type="text" id="user-input" placeholder="Ask me anything..." required>
-        <button type="submit">Send</button>
-      </form>
+    <!-- Chat Bubble -->
+    <div id="chat-bubble" onclick="toggleChatBox()">
+      <div id="chat-icon">💬</div>
     </div>
 
-    <!-- Sidebar -->
-    <div id="sidebar">
-      <div class="sidebar-item">Profile</div>
-      <div class="sidebar-item">Settings</div>
-      <div class="sidebar-item">Help</div>
+    <!-- Chat Box (hidden initially) -->
+    <div id="chat-box">
+      <div id="chat-container">
+        <button id="close-btn" onclick="toggleChatBox()">×</button> <!-- Close button -->
+        <div id="company-logo">
+          <img src="file:///C:/Users/omar.nawar/Desktop/Angular/chatbot/assets/logo.webp" alt="Company Logo" />
+        </div>
+        <h1>Chatbot</h1>
+        <div id="chat-history"></div>
+        <form id="chat-form">
+          <textarea id="user-input" placeholder="Ask me anything..." required></textarea>
+          <button type="submit" id="send-button">Send</button>
+        </form>
+      </div>
     </div>
   </div>
 
   <script>
-    // Inject CSS dynamically into the DOM
+    // Function to inject CSS dynamically into the DOM
     function injectCSS() {
       const style = document.createElement('style');
       style.type = 'text/css';
@@ -50,32 +54,81 @@
           overflow: hidden;
         }
 
-        /* Main Container */
-        #main-container {
-          display: flex;
-          width: 80%;
-          height: 90%;
-          border-radius: 10px;
-          overflow: hidden;
+        /* Chat Bubble (Old Design) */
+        #chat-bubble {
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          background-color: red; /* Company red color */
+          color: #fff;
+          padding: 15px 20px;
+          border-radius: 50%;
+          cursor: pointer;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+          font-size: 24px;
+          transition: background-color 0.3s;
         }
 
-        /* Chat Container */
-        #chat-container {
-          background-color: #262626; /* Dark background for the chat container */
+        #chat-bubble:hover {
+          background-color: #c42b2b; /* Darker red on hover */
+        }
+
+        #chat-icon {
+          font-size: 20px;
+        }
+
+        /* Chat Box (Larger Design) */
+        #chat-box {
+          display: none; /* Initially hidden */
+          position: fixed;
+          bottom: 20px;
+          right: 20px;
+          background-color: black; /* Company black color */
           border-radius: 10px;
-          width: 75%;
+          width: 400px; /* Larger chat box */
+          height: 500px; /* Increased height */
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+          z-index: 1000;
+        }
+
+        #chat-container {
           display: flex;
           flex-direction: column;
-          box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+          height: 100%;
           padding: 20px;
+          position: relative; /* For positioning the close button */
+        }
+
+        #company-logo img {
+          width: 50px;
+          height: 50px;
+          margin-bottom: 15px;
+          align-self: center;
         }
 
         h1 {
           font-size: 22px;
           font-weight: 600;
-          color: #58a6ff; /* Light blue header */
+          color: red; /* Company red color */
           text-align: center;
           margin: 20px 0;
+        }
+
+        /* Close Button (Cross) */
+        #close-btn {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          background: none;
+          border: none;
+          color: #f4f4f4;
+          font-size: 30px;
+          cursor: pointer;
+          transition: color 0.3s;
+        }
+
+        #close-btn:hover {
+          color: #ff4d4d;
         }
 
         /* Chat History */
@@ -85,6 +138,7 @@
           overflow-y: auto;
           margin-bottom: 20px;
           background-color: #1e1e1e;
+          border-radius: 10px;
         }
 
         .message {
@@ -94,7 +148,7 @@
         }
 
         .user-message {
-          background-color: #58a6ff; /* Light blue user message */
+          background-color: red; /* Company red color */
           color: #fff;
           border-radius: 15px;
           padding: 12px 18px;
@@ -104,7 +158,7 @@
         }
 
         .bot-message {
-          background-color: #444; /* Dark gray bot message */
+          background-color: #444;
           color: #f4f4f4;
           border-radius: 15px;
           padding: 12px 18px;
@@ -116,127 +170,75 @@
         /* Input Area */
         form {
           display: flex;
-          align-items: center;
+          flex-direction: column;
           padding: 15px;
           background-color: #262626;
           border-top: 1px solid #444;
         }
 
-        input {
-          flex-grow: 1;
+        /* Textarea Styling for Multi-line Input */
+        textarea {
+          width: 100%;
+          height: 50px; /* Default height */
           padding: 12px 15px;
           font-size: 16px;
-          border-radius: 25px;
+          border-radius: 10px;
           border: 1px solid #444;
           background-color: #333;
           color: #f4f4f4;
           outline: none;
+          resize: none;
+          overflow-y: auto; /* Allows scrolling */
           transition: border-color 0.3s;
-          margin-right: 10px; /* Add space between input and button */
+          margin-bottom: 10px;
         }
 
         button {
-          background-color: #58a6ff; /* Light blue button */
+          background-color: red; /* Company red color */
           color: #fff;
-          padding: 12px 20px;
+          padding: 8px 12px; /* Smaller button */
           border: none;
           border-radius: 25px;
           cursor: pointer;
-          font-size: 16px;
+          font-size: 14px; /* Smaller font size */
           transition: background-color 0.3s;
         }
 
-        input:focus {
-          border-color: #58a6ff; /* Light blue focus border */
+        textarea:focus {
+          border-color: red; /* Company red color */
         }
 
         button:hover {
-          background-color: #2b7cf5; /* Slightly darker blue on hover */
+          background-color: #c42b2b; /* Darker red on hover */
         }
 
-        /* Typing Animation */
-        .typing-indicator {
-          display: inline-block;
-          font-size: 24px;
-          color: #58a6ff;
-          font-weight: 600;
+        /* Scrollbar Styling */
+        #chat-history::-webkit-scrollbar,
+        textarea::-webkit-scrollbar {
+          width: 8px;
         }
 
-        .dot {
-          display: inline-block;
-          width: 10px;
-          height: 10px;
-          margin: 0 2px;
-          background-color: #58a6ff;
-          border-radius: 50%;
-          animation: typing 1.5s infinite;
+        #chat-history::-webkit-scrollbar-thumb,
+        textarea::-webkit-scrollbar-thumb {
+          background-color: red; /* Company red color */
+          border-radius: 10px;
         }
 
-        .dot:nth-child(1) {
-          animation-delay: 0s;
-        }
-
-        .dot:nth-child(2) {
-          animation-delay: 0.3s;
-        }
-
-        .dot:nth-child(3) {
-          animation-delay: 0.6s;
-        }
-
-        @keyframes typing {
-          0%, 100% {
-            opacity: 0;
-          }
-          50% {
-            opacity: 1;
-          }
-        }
-
-        /* Sidebar */
-        #sidebar {
-          width: 25%;
-          background-color: #333;
-          padding: 20px;
-          display: flex;
-          flex-direction: column; /* Ensure items stack vertically */
-          justify-content: flex-start; /* Align items to the top */
-          border-left: 1px solid #444;
-          color: #f4f4f4;
-        }
-
-        /* Sidebar items */
-        .sidebar-item {
-          margin-bottom: 20px; /* Add space between items */
-          padding: 10px;
-          background-color: #444;
-          border-radius: 5px;
-          text-align: center;
-          font-size: 18px;
-          transition: background-color 0.3s;
-        }
-
-        .sidebar-item:hover {
-          background-color: #58a6ff;
-          cursor: pointer;
+        #chat-history::-webkit-scrollbar-track,
+        textarea::-webkit-scrollbar-track {
+          background-color: #1e1e1e;
         }
 
         /* Responsive Design */
         @media (max-width: 800px) {
-          #main-container {
-            flex-direction: column;
-            height: 100%;
+          #chat-box {
             width: 100%;
+            bottom: 0;
+            right: 0;
           }
 
           #chat-container {
-            width: 100%;
-            margin-bottom: 20px;
-          }
-
-          #sidebar {
-            width: 100%;
-            margin-top: 20px;
+            height: 60vh;
           }
         }
       `;
@@ -249,6 +251,13 @@
     const chatHistory = document.getElementById('chat-history');
     const userInput = document.getElementById('user-input');
     const form = document.getElementById('chat-form');
+    const chatBox = document.getElementById('chat-box');
+    const closeBtn = document.getElementById('close-btn');
+
+    // Function to toggle the visibility of the chat box
+    function toggleChatBox() {
+      chatBox.style.display = chatBox.style.display === 'none' || chatBox.style.display === '' ? 'block' : 'none';
+    }
 
     // Function to simulate typing effect
     function typeMessage(message, container) {
@@ -297,26 +306,25 @@
         const botMessage = data.response;
 
         // Remove typing indicator
-        typingIndicator.remove();
+        chatHistory.removeChild(typingIndicator);
 
-        // Create a bot message container
+        // Display bot message
         const botMessageContainer = document.createElement('div');
         botMessageContainer.classList.add('message', 'bot-message');
         chatHistory.appendChild(botMessageContainer);
 
-        // Type out the bot's message progressively
+        // Type out the bot's message
         typeMessage(botMessage, botMessageContainer);
 
-        // Scroll to the bottom of the chat history
         chatHistory.scrollTop = chatHistory.scrollHeight;
       } catch (error) {
         console.error('Error:', error);
-        chatHistory.innerHTML += `<div class="message bot-message">Sorry, something went wrong. Please try again.</div>`;
       }
     }
 
+    // Event listener for the form submission
     form.addEventListener('submit', (event) => {
-      event.preventDefault(); // Prevent form submission
+      event.preventDefault();
       sendMessage();
     });
   </script>
